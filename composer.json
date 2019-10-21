@@ -1,0 +1,23 @@
+{
+    "name": "micovery/apigee-graphql-drupal-module",
+    "description": "Drupal 8 module that bundles the GraphQL Playground",
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Miguel Mendoza",
+            "email": "miguelmendoza@google.com"
+        },
+        {
+          "name": "Tristan Wells (tristanwellz)",
+          "role": "Developer"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master"
+        }
+    }
+}
+
+
