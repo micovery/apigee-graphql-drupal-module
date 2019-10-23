@@ -35,7 +35,8 @@ class DynamicRouter {
         '_title' => 'GraphQL Playground'
       ],
       [
-        '_permission'  => 'access content',
+        //'_permission'  => 'access content',
+        '_custom_access' => '\Drupal\\'.MODULE_NAME.'\Controller\PlaygroundController::access',
       ]
     );
 

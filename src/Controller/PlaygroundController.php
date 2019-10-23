@@ -19,6 +19,8 @@ use Drupal\Core\Controller\ControllerBase;
 use \Drupal\Component\Utility\UrlHelper;
 use \Drupal\Component\Utility\Crypt;
 
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 
 module_load_include('inc', 'apigee_drupal8_graphql', 'src/apigee_drupal8_graphql.constants');
 module_load_include('inc', 'apigee_drupal8_graphql', 'src/apigee_drupal8_graphql.functions');
@@ -92,7 +94,7 @@ class PlaygroundController extends ControllerBase {
       return true;
 
     }
-    catch (RequestException $e) {
+    catch (\Exception $e) {
       watchdog_exception(MODULE_NAME, $e, "Could not get OAuth access token for GraphQL Playground");
     }
 
@@ -139,7 +141,7 @@ class PlaygroundController extends ControllerBase {
         error_response => null
       ];
 
-    } catch (RequestException $e) {
+    } catch (\Exception $e) {
       return [
         token_response => null,
         error_response => [
@@ -245,6 +247,21 @@ class PlaygroundController extends ControllerBase {
     }
 
     return $state == $saved_state;
+  }
+
+  public function access() {
+    $config = get_module_settings()->get(MODULE_CONFIG_ROOT);
+    $access_requirement = $this->get($config[PLAYGROUND_ACCESS_VAR], PLAYGROUND_ACCESS_EVERYONE);
+
+    if ($access_requirement == PLAYGROUND_ACCESS_EVERYONE) {
+      return AccessResult::allowed();
+    }
+
+    if ($access_requirement == PLAYGROUND_ACCESS_LOGGED_IN && \Drupal::currentUser()->isAuthenticated()) {
+      return AccessResult::allowed();
+    }
+
+    return AccessResult::forbidden();
   }
 
 
