@@ -66,7 +66,7 @@ function set_default_values() {
     OAUTH_CLIENT_SECRET_VAR => 'your_application_client_secret',
     OAUTH_AUTH_URI_VAR => 'https://example.com/oauth2/authorize',
     OAUTH_TOKEN_URI_VAR => 'https://example.com/oauth2/token',
-    OAUTH_REDIRECT_URI_VAR => 'http://yoursite.devportal.apigee.io/graphql-playground',
+    OAUTH_REDIRECT_URI_VAR => 'http://yoursite.devportal.apigee.io/playground',
     OAUTH_SCOPES_VAR => 'scope1 scope2 etc',
     OAUTH_GRANT_TYPES_VAR => array(
       OAUTH_GRANT_TYPE_CLIENT_CREDENTIALS => 0,
