@@ -119,36 +119,25 @@ function clear_main_menu_id() {
 }
 
 function delete_main_menu() {
-  $id = get_main_menu_id();
+  $uuid = get_main_menu_id();
 
-  if (!$id) {
+  if (!$uuid) {
     return;
   }
 
-  //menu_link_delete($id);
+
+  menu_link_delete($uuid);
   clear_main_menu_id();
 }
 
-function enable_or_update_main_menu($configs) {
-  $new_title = $configs['new'][PLAYGROUND_MENU_LINK_TITLE_VAR];
-  $new_path = $configs['new'][PLAYGROUND_PATH_VAR];
+function menu_link_delete($uuid) {
+  $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['uuid' => $uuid]);
+  $menu_link = reset($menu_links);
 
-  $old_title = $configs['old'][PLAYGROUND_MENU_LINK_TITLE_VAR];
-  $old_path = $configs['old'][PLAYGROUND_PATH_VAR];
-
-  $uuid = get_main_menu_id() ?: "";
-
-  $uuid = menu_link_save($uuid, $new_title, $new_path);
-
-  set_main_menu_id($uuid);
-
-  if ($new_path != $old_path) {
-    //We need to clear the cache so that the menu is rebuilt
-    //cache_clear_all('*', 'cache_page', TRUE);
-    Drupal::cache('menu')->invalidateAll();
-    drupal_flush_all_caches();
-    drupal_set_message('Caches cleared');
+  if (!$menu_link) {
+    return;
   }
+  $menu_link->delete();
 }
 
 

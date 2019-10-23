@@ -163,12 +163,41 @@ class AdminForm extends ConfigFormBase {
 
 
   protected function updateMenu($configs) {
+
+    $this->handleMainMenuUpdate($configs);
+    $this->clearCacheIfPathChanged($configs);
+
+  }
+
+  function handleMainMenuUpdate($configs) {
     if (!$configs['new'][PLAYGROUND_MENU_LINK_ENABLED_VAR]) {
       delete_main_menu();
       return;
     }
 
-    enable_or_update_main_menu($configs);
+    $new_title = $configs['new'][PLAYGROUND_MENU_LINK_TITLE_VAR];
+    $new_path = $configs['new'][PLAYGROUND_PATH_VAR];
+
+    $old_title = $configs['old'][PLAYGROUND_MENU_LINK_TITLE_VAR];
+    $old_path = $configs['old'][PLAYGROUND_PATH_VAR];
+
+    $uuid = get_main_menu_id() ?: "";
+
+    $uuid = menu_link_save($uuid, $new_title, $new_path);
+
+    set_main_menu_id($uuid);
+  }
+
+
+  protected function clearCacheIfPathChanged($configs): void
+  {
+    if ($configs['old'][PLAYGROUND_PATH_VAR] != $configs['new'][PLAYGROUND_PATH_VAR]) {
+      //We need to clear the cache so that the menu is rebuilt
+      //cache_clear_all('*', 'cache_page', TRUE);
+      \Drupal::cache('menu')->invalidateAll();
+      drupal_flush_all_caches();
+      drupal_set_message('Caches cleared');
+    }
   }
 
 }
